@@ -16,8 +16,8 @@
         />
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
@@ -25,12 +25,13 @@
             android:text="Title of Trending Movie this week"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
-        <TextView
-            android:id="@+id/textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!" />
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_trending_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
 </FrameLayout>

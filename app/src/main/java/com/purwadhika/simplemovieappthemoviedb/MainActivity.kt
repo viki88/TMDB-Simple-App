@@ -7,8 +7,13 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.purwadhika.simplemovieappthemoviedb.network.ApiService
+import com.purwadhika.simplemovieappthemoviedb.network.response.Genre
+import com.purwadhika.simplemovieappthemoviedb.network.response.GenreResponse
 import com.purwadhika.simplemovieappthemoviedb.network.response.TrendingMovieResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,19 +22,55 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
 
     lateinit var progressBarView :ProgressBar
-    lateinit var textResponseView :TextView
+    lateinit var trendingRecyclerView :RecyclerView
+    lateinit var adapter: TrendingMovieListAdapter
+    var genreList = listOf<Genre>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         progressBarView = findViewById(R.id.progress_bar)
-        textResponseView = findViewById(R.id.textview)
+        trendingRecyclerView = findViewById(R.id.rv_trending_list)
 
-        loadTrendingMovie()
+        setupListView()
+
+        loadGenreList()
+    }
+
+    private fun setupListView(){
+        adapter = TrendingMovieListAdapter(this)
+        trendingRecyclerView.layoutManager = LinearLayoutManager(this)
+        trendingRecyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        trendingRecyclerView.adapter = adapter
+    }
+
+    private fun loadGenreList(){
+        progressBarView.visibility = View.VISIBLE
+        ApiService().getTheMovieDbApiService().getAllGenres(Constant.API_KEY)
+            .enqueue(object :Callback<GenreResponse>{
+                override fun onFailure(call: Call<GenreResponse>, t: Throwable) {
+                    progressBarView.visibility = View.GONE
+                    Log.i("TMDB", "onFailure: ${t.message}")
+                    Toast.makeText(this@MainActivity, "error response : ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onResponse(
+                    call: Call<GenreResponse>,
+                    response: Response<GenreResponse>
+                ) {
+                    progressBarView.visibility = View.GONE
+                    val responseData = response.body()
+                    responseData?.let {
+                        genreList = it.genres
+                        loadTrendingMovie()
+                    }
+                }
+
+            })
     }
     
-    fun loadTrendingMovie(){
+    private fun loadTrendingMovie(){
         progressBarView.visibility = View.VISIBLE
         ApiService().getTheMovieDbApiService().getAllTrending(Constant.API_KEY)
                 .enqueue(object :Callback<TrendingMovieResponse>{
@@ -44,13 +85,10 @@ class MainActivity : AppCompatActivity() {
 
                         val responseData = response.body()
 
-                        Log.i("TMDB", "onResponse: ${Gson().toJson(responseData)}")
-                        var titleMovieString = ""
-                        responseData?.results?.forEach {
-                            titleMovieString += it.title +"\n"
+                        responseData?.let {
+                            adapter.updateGenreList(genreList)
+                            adapter.updateList(it.results)
                         }
-
-                        textResponseView.text = titleMovieString
                     }
 
                 })
