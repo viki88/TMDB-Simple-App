@@ -1,4 +1,4 @@
-package com.purwadhika.simplemovieappthemoviedb
+package com.purwadhika.simplemovieappthemoviedb.ui.home
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.purwadhika.simplemovieappthemoviedb.Constant
+import com.purwadhika.simplemovieappthemoviedb.R
 import com.purwadhika.simplemovieappthemoviedb.network.response.Genre
 import com.purwadhika.simplemovieappthemoviedb.network.response.Movie
 import com.squareup.picasso.Picasso
 
-class TrendingMovieListAdapter(private var context: Context) :RecyclerView.Adapter<TrendingMovieListAdapter.TrendingMovieViewHolder>(){
+class TrendingMovieListAdapter(private var context: Context,private var onClickMovieListListerner: OnClickMovieListListerner) :RecyclerView.Adapter<TrendingMovieListAdapter.TrendingMovieViewHolder>(){
 
     private var listMovie = listOf<Movie>()
     private var genreList = listOf<Genre>()
@@ -23,7 +25,7 @@ class TrendingMovieListAdapter(private var context: Context) :RecyclerView.Adapt
 
         fun bind(movie :Movie){
             // load image into ImageView
-            Picasso.get().load(Constant.IMAGE_BASE_URL+Constant.IMAGE_SIZE_500_SIZE+movie.poster_path).into(imagePreviewView)
+            Picasso.get().load(Constant.IMAGE_BASE_URL + Constant.IMAGE_SIZE_500_SIZE +movie.poster_path).into(imagePreviewView)
 
             titleMovieView.text = movie.title
 
@@ -35,6 +37,10 @@ class TrendingMovieListAdapter(private var context: Context) :RecyclerView.Adapt
             }
 
             ratingView.text = genreStringArray.joinToString(separator = ",") + "\n" + ratingString
+
+            itemView.setOnClickListener {
+                onClickMovieListListerner.onClickMovieList(movie)
+            }
         }
 
     }
@@ -57,5 +63,9 @@ class TrendingMovieListAdapter(private var context: Context) :RecyclerView.Adapt
 
     fun updateGenreList(genreList :List<Genre>){
         this.genreList = genreList
+    }
+
+    interface OnClickMovieListListerner{
+        fun onClickMovieList(movie: Movie)
     }
 }

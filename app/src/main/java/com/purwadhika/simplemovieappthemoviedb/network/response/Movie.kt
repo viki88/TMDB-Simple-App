@@ -1,5 +1,9 @@
 package com.purwadhika.simplemovieappthemoviedb.network.response
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Movie(
         var video :Boolean,
         var id :Long,
@@ -16,4 +20,4 @@ data class Movie(
         var title :String,
         var popularity :Double,
         var media_type :String
-)
+) :Parcelable
