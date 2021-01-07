@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_trending"
+        android:title="trending"
+        android:icon="@drawable/ic_trending_up"
+        app:showAsAction="always"/>
+    <item android:id="@+id/menu_favorite"
+        android:title="Favorite"
+        android:icon="@drawable/ic_fav_enable"
+        app:showAsAction="always"/>
+</menu>

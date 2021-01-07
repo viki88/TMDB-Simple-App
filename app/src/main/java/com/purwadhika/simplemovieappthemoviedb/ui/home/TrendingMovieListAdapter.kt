@@ -13,7 +13,8 @@ import com.purwadhika.simplemovieappthemoviedb.network.response.Genre
 import com.purwadhika.simplemovieappthemoviedb.network.response.Movie
 import com.squareup.picasso.Picasso
 
-class TrendingMovieListAdapter(private var context: Context,private var onClickMovieListListerner: OnClickMovieListListerner) :RecyclerView.Adapter<TrendingMovieListAdapter.TrendingMovieViewHolder>(){
+class TrendingMovieListAdapter(private var context: Context,private var onClickMovieListListerner: OnClickMovieListListerner) :
+        RecyclerView.Adapter<TrendingMovieListAdapter.TrendingMovieViewHolder>(){
 
     private var listMovie = listOf<Movie>()
     private var genreList = listOf<Genre>()
